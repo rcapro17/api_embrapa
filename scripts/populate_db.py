@@ -23,19 +23,14 @@ def salvar(dados, session):
     for item in dados:
         filtros = []
 
-        # Filtrar por etapa (sempre presente)
         if item.get("etapa") is not None:
             filtros.append(Cultivar.etapa == item["etapa"])
-
-        # Processamento:
         if item.get("categoria_uva") is not None:
             filtros.append(Cultivar.categoria_uva == item["categoria_uva"])
         if item.get("tipo_uva") is not None:
             filtros.append(Cultivar.tipo_uva == item["tipo_uva"])
         if item.get("nome_uva") is not None:
             filtros.append(Cultivar.nome_uva == item["nome_uva"])
-
-        # Produção / Comerc / Imp / Exp:
         if item.get("categoria_produto") is not None:
             filtros.append(Cultivar.categoria_produto ==
                            item["categoria_produto"])
@@ -43,37 +38,26 @@ def salvar(dados, session):
             filtros.append(Cultivar.tipo_produto == item["tipo_produto"])
         if item.get("produto") is not None:
             filtros.append(Cultivar.produto == item["produto"])
-
-        # Quantidade em litros (string) – somente se não estiver vazia:
         if item.get("quantidade_l"):
             filtros.append(Cultivar.quantidade_l == item["quantidade_l"])
-
-        # Quantidade em kg (int) – somente se for int, não None
         qtkg = item.get("quantidade_kg")
         if isinstance(qtkg, int):
             filtros.append(Cultivar.quantidade_kg == qtkg)
 
-        # Valor em USD (int) – somente se for int, não None
         valor_usd = item.get("valor_usd")
         if isinstance(valor_usd, int):
             filtros.append(Cultivar.valor_usd == valor_usd)
-
-        # Ano (sempre inteiro)
         if item.get("ano") is not None:
             filtros.append(Cultivar.ano == item["ano"])
-
-        # País (string) – somente se não for vazio:
         if item.get("pais"):
             filtros.append(Cultivar.pais == item["pais"])
 
-        # Agora verificamos se já existe:
         exists = session.query(Cultivar).filter(and_(*filtros)).first()
 
         if not exists:
             # Constrói o dicionário “novo_item” exatamente com as chaves que nosso modelo aceita:
             novo_item = {}
             for k, v in item.items():
-                # renomeia “quantidade_l” caso usado com barra ou maiúsculas (por segurança):
                 if k in ("quantidade/L", "Quantidade/L"):
                     novo_item["quantidade_l"] = v
                 else:

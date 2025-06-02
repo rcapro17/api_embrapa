@@ -23,7 +23,6 @@ def listar_producao():
     """
     dados = get_producao_data()
 
-    # filtro: ano
     ano_f = request.args.get("ano")
     if ano_f:
         try:
@@ -32,13 +31,11 @@ def listar_producao():
         except ValueError:
             pass
 
-    # filtro: categoria_produto
     cat_prod = request.args.get("categoria_produto")
     if cat_prod:
         dados = [item for item in dados if item.get(
             "categoria_produto") == cat_prod]
 
-    # paginação
     limit = int(request.args.get("limit", 100))
     offset = int(request.args.get("offset", 0))
     return jsonify(paginar(dados, limit, offset))

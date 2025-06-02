@@ -25,7 +25,6 @@ def listar_comercializacao():
     """
     dados = get_comercializacao_data()
 
-    # filtro: ano
     ano_f = request.args.get("ano")
     if ano_f:
         try:
@@ -34,18 +33,15 @@ def listar_comercializacao():
         except ValueError:
             pass
 
-    # filtro: categoria_produto
     cat_prod = request.args.get("categoria_produto")
     if cat_prod:
         dados = [item for item in dados if item.get(
             "categoria_produto") == cat_prod]
 
-    # filtro: tipo_produto
     tipo_p = request.args.get("tipo_produto")
     if tipo_p:
         dados = [item for item in dados if item.get("tipo_produto") == tipo_p]
 
-    # paginação
     limit = int(request.args.get("limit", 100))
     offset = int(request.args.get("offset", 0))
     return jsonify(paginar(dados, limit, offset))
