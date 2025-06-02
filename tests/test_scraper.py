@@ -1,4 +1,4 @@
-# tests/test_scraper.py
+# test/test_scraper.py
 
 import pytest
 from services.scraper import (
@@ -11,7 +11,7 @@ from services.scraper import (
 
 
 def test_get_producao_data():
-    data = get_producao_data()
+    data = get_producao_data(ano_inicio=2022, ano_fim=2023)
     assert isinstance(data, list)
     exemplo = data[0]
     chaves_obrigatorias = {"etapa", "categoria_produto",
@@ -21,19 +21,17 @@ def test_get_producao_data():
 
 
 def test_get_processamento_data():
-    data = get_processamento_data()
+    data = get_processamento_data(ano_inicio=2022, ano_fim=2023)
     assert isinstance(data, list)
-    # agora em cada item de processamento devem existir estas chaves:
     exemplo = data[0]
     chaves_obrigatorias = {"etapa", "categoria_uva",
                            "tipo_uva", "nome_uva", "quantidade_kg", "ano"}
     assert all(ch in exemplo for ch in chaves_obrigatorias)
-    # opcionalmente você pode checar também que 'etapa' == "Processamento":
     assert all(item["etapa"] == "Processamento" for item in data)
 
 
 def test_get_comercializacao_data():
-    data = get_comercializacao_data()
+    data = get_comercializacao_data(ano_inicio=2022, ano_fim=2023)
     assert isinstance(data, list)
     exemplo = data[0]
     chaves_obrigatorias = {"etapa", "categoria_produto",
@@ -43,14 +41,20 @@ def test_get_comercializacao_data():
 
 
 def test_get_importacao_data():
-    data = get_importacao_data()
+    data = get_importacao_data(ano_inicio=2022, ano_fim=2023)
     assert isinstance(data, list)
-    assert all("etapa" in item and item["etapa"]
-               == "Importação" for item in data)
+    exemplo = data[0]
+    chaves_obrigatorias = {"etapa", "categoria_produto",
+                           "ano", "pais", "quantidade_kg", "valor_usd"}
+    assert all(ch in exemplo for ch in chaves_obrigatorias)
+    assert all(item["etapa"] == "Importação" for item in data)
 
 
 def test_get_exportacao_data():
-    data = get_exportacao_data()
+    data = get_exportacao_data(ano_inicio=2022, ano_fim=2023)
     assert isinstance(data, list)
-    assert all("etapa" in item and item["etapa"]
-               == "Exportação" for item in data)
+    exemplo = data[0]
+    chaves_obrigatorias = {"etapa", "categoria_produto",
+                           "ano", "pais", "quantidade_kg", "valor_usd"}
+    assert all(ch in exemplo for ch in chaves_obrigatorias)
+    assert all(item["etapa"] == "Exportação" for item in data)
