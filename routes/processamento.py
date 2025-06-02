@@ -25,7 +25,6 @@ def listar_processamento():
     """
     dados = get_processamento_data()
 
-    # filtro: ano
     ano_f = request.args.get("ano")
     if ano_f:
         try:
@@ -34,18 +33,15 @@ def listar_processamento():
         except ValueError:
             pass
 
-    # filtro: categoria_uva
     cat_uva = request.args.get("categoria_uva")
     if cat_uva:
         dados = [item for item in dados if item.get(
             "categoria_uva") == cat_uva]
 
-    # filtro: tipo_uva
     tipo_f = request.args.get("tipo_uva")
     if tipo_f:
         dados = [item for item in dados if item.get("tipo_uva") == tipo_f]
 
-    # paginação
     limit = int(request.args.get("limit", 100))
     offset = int(request.args.get("offset", 0))
     return jsonify(paginar(dados, limit, offset))

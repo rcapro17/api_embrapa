@@ -23,8 +23,6 @@ def listar_exportacao():
       - offset (int, default=0)
     """
     dados = get_exportacao_data()
-
-    # filtro: ano
     ano_f = request.args.get("ano")
     if ano_f:
         try:
@@ -33,18 +31,15 @@ def listar_exportacao():
         except ValueError:
             pass
 
-    # filtro: categoria_produto
     cat_prod = request.args.get("categoria_produto")
     if cat_prod:
         dados = [item for item in dados if item.get(
             "categoria_produto") == cat_prod]
 
-    # filtro: pais
     pais_f = request.args.get("pais")
     if pais_f:
         dados = [item for item in dados if item.get("pais") == pais_f]
 
-    # paginação
     limit = int(request.args.get("limit", 100))
     offset = int(request.args.get("offset", 0))
     return jsonify(paginar(dados, limit, offset))
