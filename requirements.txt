@@ -1,0 +1,15 @@
+flask
+requests
+beautifulsoup4
+flask-jwt-extended
+mysql-connector-python
+SQLAlchemy
+pytest
+psycopg2-binary
+gunicorn
+python-dotenv
+Flask
+Flask-JWT-Extended
+Flask-Cors
+flask-cors
+flask_swagger_ui

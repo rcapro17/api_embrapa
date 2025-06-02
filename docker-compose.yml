@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+
+  postgres_embrapa:
+    image: postgres:14-alpine
+    container_name: postgres_embrapa
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  flask_embrapa:
+    build: .
+    container_name: flask_embrapa
+    depends_on:
+      - postgres_embrapa
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ACCESS_TOKEN_MINUTES=${JWT_ACCESS_TOKEN_MINUTES}
+      - JWT_REFRESH_TOKEN_DAYS=${JWT_REFRESH_TOKEN_DAYS}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - SWAGGER_URL=${SWAGGER_URL}
+      - API_YAML_PATH=${API_YAML_PATH}
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["python", "app.py"]
+
+volumes:
+  pgdata:

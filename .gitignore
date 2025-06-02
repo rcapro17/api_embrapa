@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.sqlite3
+embrapa.db
+venv/
+.pytest_cache/
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Docker
+*.log
+
+# Node (se houver frontend)
+node_modules/
+
+# Ambiente
+.env
