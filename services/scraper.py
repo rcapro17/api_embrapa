@@ -109,17 +109,19 @@ def _extract_table_categorizada(soup, etapa, categoria_uva, ano):
     return resultados
 
 
-def get_processamento_data():
-    logger.info("Iniciando scraping de Processamento")
+def get_processamento_data(ano_inicio=2020, ano_fim=2024):
+    logger.info(
+        f"Iniciando scraping de Processamento ({ano_inicio}-{ano_fim})")
     base_url = _BASE_URL
     subopcoes = _PROCESS_CATEGORIES
     todos = []
+    session = requests.Session()
 
-    for ano in range(1970, 2025):
+    for ano in range(ano_inicio, ano_fim + 1):
         for categoria_uva, subopt in subopcoes.items():
             params = {"opcao": "opt_03", "subopcao": subopt, "ano": str(ano)}
             try:
-                r = requests.get(base_url, params=params, timeout=10)
+                r = session.get(base_url, params=params, timeout=10)
                 r.encoding = "utf-8"
                 soup = BeautifulSoup(r.text, "html.parser")
                 todos.extend(
@@ -136,102 +138,15 @@ def get_processamento_data():
     return todos
 
 
-def get_producao_data() -> list[dict]:
-    logger.info("Iniciando scraping de Produção")
-    all_data: list[dict] = []
-
-    for ano in range(1970, 2025):
-        url = f"{_BASE_URL}?opcao=opt_02&ano={ano}"
-        soup = _safe_get(url)
-        if soup is None:
-            continue
-
-        current_categoria = None
-        rows = soup.select("table.tb_dados tbody tr")
-
-        for row in rows:
-            cols = row.find_all("td")
-            if len(cols) != 2:
-                continue
-
-            nome = cols[0].get_text(strip=True)
-            valor = cols[1].get_text(strip=True)
-
-            if "tb_item" in cols[0].get("class", []):
-                current_categoria = nome
-                all_data.append({
-                    "etapa": "Produção",
-                    "categoria_produto": current_categoria,
-                    "tipo_produto": "",
-                    "quantidade_l": "",
-                    "ano": ano
-                })
-            elif "tb_subitem" in cols[0].get("class", []):
-                all_data.append({
-                    "etapa": "Produção",
-                    "categoria_produto": current_categoria,
-                    "tipo_produto": nome,
-                    "quantidade_l": valor,
-                    "ano": ano
-                })
-
-    logger.info(f"Scraping de Produção completo: {len(all_data)} registros")
-    return all_data
-
-
-def get_comercializacao_data() -> list[dict]:
-    logger.info("Iniciando scraping de Comercialização")
-    all_data: list[dict] = []
-
-    for ano in range(1970, 2025):
-        url = f"{_BASE_URL}?opcao=opt_04&ano={ano}"
-        soup = _safe_get(url)
-        if soup is None:
-            continue
-
-        current_categoria = None
-        rows = soup.select("table.tb_dados tbody tr")
-
-        for row in rows:
-            cols = row.find_all("td")
-            if len(cols) != 2:
-                continue
-
-            nome = cols[0].get_text(strip=True)
-            valor = cols[1].get_text(strip=True)
-
-            if "tb_item" in cols[0].get("class", []):
-                current_categoria = nome
-                all_data.append({
-                    "etapa": "Comercialização",
-                    "categoria_produto": current_categoria,
-                    "produto": "",
-                    "quantidade_l": "",
-                    "ano": ano
-                })
-            elif "tb_subitem" in cols[0].get("class", []):
-                all_data.append({
-                    "etapa": "Comercialização",
-                    "categoria_produto": current_categoria,
-                    "produto": nome,
-                    "quantidade_l": valor,
-                    "ano": ano
-                })
-
-    logger.info(
-        f"Scraping de Comercialização completo: {len(all_data)} registros")
-    return all_data
-
-
-def get_importacao_data():
-    logger.info("Iniciando scraping de Importação")
+def get_importacao_data(ano_inicio=2020, ano_fim=2024):
+    logger.info(f"Iniciando scraping de Importação ({ano_inicio}-{ano_fim})")
     BASE_URL = f"{_BASE_URL}?opcao=opt_05"
     CATEGORIAS = _IMPORT_CATEGORIES
     session = requests.Session()
     all_data = []
 
     for categoria_nome, subopcao in CATEGORIAS.items():
-        for ano in range(1970, 2025):
+        for ano in range(ano_inicio, ano_fim + 1):
             try:
                 logger.info(
                     f"[Importação] solicitando ano={ano}, categoria={categoria_nome}")
@@ -277,15 +192,15 @@ def get_importacao_data():
     return all_data
 
 
-def get_exportacao_data():
-    logger.info("Iniciando scraping de Exportação")
+def get_exportacao_data(ano_inicio=2020, ano_fim=2024):
+    logger.info(f"Iniciando scraping de Exportação ({ano_inicio}-{ano_fim})")
     BASE_URL = f"{_BASE_URL}?opcao=opt_06"
     CATEGORIAS = _EXPORT_CATEGORIES
     session = requests.Session()
     all_data = []
 
     for categoria_nome, subopcao in CATEGORIAS.items():
-        for ano in range(1970, 2025):
+        for ano in range(ano_inicio, ano_fim + 1):
             try:
                 logger.info(
                     f"[Exportação] solicitando ano={ano}, categoria={categoria_nome}")
