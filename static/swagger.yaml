@@ -11,7 +11,7 @@ info:
 
 servers:
   - url: /
-    description: Server local ou de produção
+    description: api-official
 
 paths:
   /token:
@@ -132,13 +132,19 @@ paths:
           in: query
           schema:
             type: string
-            enum: ["Viníferas", "Americanas e híbridas"]
+            enum:
+              [
+                "Viníferas",
+                "Americanas e híbridas",
+                "Uvas de mesa",
+                "Sem classificação",
+              ]
           description: Filtra pela categoria de uva
         - name: tipo_uva
           in: query
           schema:
             type: string
-            enum: ["Tinto", "Branco", "Rosado"]
+            enum: ["Tintas", "Brancas e Rosadas"]
           description: Filtra pelo tipo de uva
         - $ref: "#/components/parameters/limit"
         - $ref: "#/components/parameters/offset"
@@ -175,7 +181,13 @@ paths:
           in: query
           schema:
             type: string
-            enum: ["VINHO DE MESA", "ESPUMANTES", "SUCO DE UVAS"]
+            enum:
+              [
+                "VINHO DE MESA",
+                "ESPUMANTES",
+                "SUCO DE UVAS",
+                "VINHO FINO DE MESA",
+              ]
           description: Filtra pela categoria de produto
         - name: tipo_produto
           in: query
@@ -218,13 +230,20 @@ paths:
           in: query
           schema:
             type: string
-            enum: ["Vinhos de mesa", "Espumantes", "Uvas frescas"]
+            enum:
+              [
+                "Vinhos de mesa",
+                "Espumantes",
+                "Uvas frescas",
+                "Uvas passas",
+                "Suco de uva",
+              ]
           description: Filtra pela categoria de produto
         - name: pais
           in: query
           schema:
             type: string
-            enum: ["Argentina", "Chile", "Portugal", "Itália"]
+            enum: ["Argentina", "Chile", "Portugal", "Itália", "Brasil"]
           description: Filtra pelo país de origem
         - $ref: "#/components/parameters/limit"
         - $ref: "#/components/parameters/offset"
