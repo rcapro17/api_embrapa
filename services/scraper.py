@@ -138,6 +138,116 @@ def get_processamento_data(ano_inicio=2020, ano_fim=2024):
     return todos
 
 
+def get_producao_data(ano_inicio: int = 1970, ano_fim: int = 2024) -> list[dict]:
+    """
+    Faz scraping dos dados da aba Produção entre ano_inicio e ano_fim.
+    Retorna uma lista de dicionários:
+      [
+        {
+          "etapa": "Produção",
+          "categoria_produto": "<VINHO DE MESA|VINHO FINO|SUCO|DERIVADOS>",
+          "tipo_produto": "<string ou '' para TOTAL>",
+          "quantidade_l": "<string ou '' para TOTAL>",
+          "ano": 1970
+        },
+        ...
+      ]
+    """
+    all_data: list[dict] = []
+
+    for ano in range(ano_inicio, ano_fim + 1):
+        url = f"{_BASE_URL}?opcao=opt_02&ano={ano}"
+        soup = _safe_get(url)
+        if soup is None:
+            continue
+
+        current_categoria = None
+        rows = soup.select("table.tb_dados tbody tr")
+
+        for row in rows:
+            cols = row.find_all("td")
+            if len(cols) != 2:
+                continue
+
+            nome = cols[0].get_text(strip=True)
+            valor = cols[1].get_text(strip=True)
+
+            if "tb_item" in cols[0].get("class", []):
+                current_categoria = nome
+                all_data.append({
+                    "etapa": "Produção",
+                    "categoria_produto": current_categoria,
+                    "tipo_produto": "",
+                    "quantidade_l": "",
+                    "ano": ano
+                })
+            elif "tb_subitem" in cols[0].get("class", []):
+                all_data.append({
+                    "etapa": "Produção",
+                    "categoria_produto": current_categoria,
+                    "tipo_produto": nome,
+                    "quantidade_l": valor,
+                    "ano": ano
+                })
+
+    return all_data
+
+
+def get_comercializacao_data(ano_inicio: int = 1970, ano_fim: int = 2024) -> list[dict]:
+    """
+    Faz scraping dos dados da aba Comercialização entre ano_inicio e ano_fim.
+    Retorna uma lista de dicionários:
+      [
+        {
+          "etapa": "Comercialização",
+          "categoria_produto": "<VINHO DE MESA|VINHO FINO|VINHO FRIZANTE|…>",
+          "produto": "<string ou '' para TOTAL>",
+          "quantidade_l": "<string ou '' para TOTAL>",
+          "ano": 1970
+        },
+        ...
+      ]
+    """
+    all_data: list[dict] = []
+
+    for ano in range(ano_inicio, ano_fim + 1):
+        url = f"{_BASE_URL}?opcao=opt_04&ano={ano}"
+        soup = _safe_get(url)
+        if soup is None:
+            continue
+
+        current_categoria = None
+        rows = soup.select("table.tb_dados tbody tr")
+
+        for row in rows:
+            cols = row.find_all("td")
+            if len(cols) != 2:
+                continue
+
+            nome = cols[0].get_text(strip=True)
+            valor = cols[1].get_text(strip=True)
+
+            if "tb_item" in cols[0].get("class", []):
+                current_categoria = nome
+                all_data.append({
+                    "etapa": "Comercialização",
+                    "categoria_produto": current_categoria,
+                    "produto": "",
+                    "quantidade_l": "",
+                    "ano": ano
+                })
+            elif "tb_subitem" in cols[0].get("class", []):
+                all_data.append({
+                    "etapa": "Comercialização",
+                    "categoria_produto": current_categoria,
+                    "produto": nome,
+                    "quantidade_l": valor,
+                    "ano": ano
+                })
+
+    return all_data
+
+
 def get_importacao_data(ano_inicio=2020, ano_fim=2024):
     logger.info(f"Iniciando scraping de Importação ({ano_inicio}-{ano_fim})")
     BASE_URL = f"{_BASE_URL}?opcao=opt_05"
