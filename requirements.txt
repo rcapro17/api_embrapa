@@ -5,7 +5,6 @@ flask-jwt-extended
 mysql-connector-python
 SQLAlchemy
 pytest
-logging
 psycopg2-binary
 gunicorn
 python-dotenv
