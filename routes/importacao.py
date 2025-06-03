@@ -26,7 +26,7 @@ def listar_importacao():
       - offset (int, default=0)
     """
     try:
-        ano_inicio = int(request.args.get("ano_inicio", 2020))
+        ano_inicio = int(request.args.get("ano_inicio", 1970))
         ano_fim = int(request.args.get("ano_fim", 2024))
         dados = get_importacao_data(ano_inicio=ano_inicio, ano_fim=ano_fim)
     except Exception as e:
