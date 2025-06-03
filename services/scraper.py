@@ -109,7 +109,7 @@ def _extract_table_categorizada(soup, etapa, categoria_uva, ano):
     return resultados
 
 
-def get_processamento_data(ano_inicio=2020, ano_fim=2024):
+def get_processamento_data(ano_inicio=1970, ano_fim=2024):
     logger.info(
         f"Iniciando scraping de Processamento ({ano_inicio}-{ano_fim})")
     base_url = _BASE_URL
@@ -248,7 +248,7 @@ def get_comercializacao_data(ano_inicio: int = 1970, ano_fim: int = 2024) -> lis
     return all_data
 
 
-def get_importacao_data(ano_inicio=2020, ano_fim=2024):
+def get_importacao_data(ano_inicio=1970, ano_fim=2024):
     logger.info(f"Iniciando scraping de Importação ({ano_inicio}-{ano_fim})")
     BASE_URL = f"{_BASE_URL}?opcao=opt_05"
     CATEGORIAS = _IMPORT_CATEGORIES
@@ -302,7 +302,7 @@ def get_importacao_data(ano_inicio=2020, ano_fim=2024):
     return all_data
 
 
-def get_exportacao_data(ano_inicio=2020, ano_fim=2024):
+def get_exportacao_data(ano_inicio=1970, ano_fim=2024):
     logger.info(f"Iniciando scraping de Exportação ({ano_inicio}-{ano_fim})")
     BASE_URL = f"{_BASE_URL}?opcao=opt_06"
     CATEGORIAS = _EXPORT_CATEGORIES
