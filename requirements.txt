@@ -13,3 +13,4 @@ Flask-JWT-Extended
 Flask-Cors
 flask-cors
 flask_swagger_ui
+logging
