@@ -1,17 +1,19 @@
 FROM python:3.11-slim
 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
-COPY requirements.txt .
+COPY requirements.txt /app/
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt
 
-# Adicione build-essential e wheel para evitar erros em pacotes nativos
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && pip install --upgrade pip setuptools wheel \
-    && pip install -r requirements.txt \
-    && apt-get remove -y build-essential \
-    && apt-get autoremove -y
+COPY . /app/
 
-COPY . .
+# Expor porta em que o App irá escutar
+EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# Comando de inicialização: 
+# usamos 4 workers (ajuste conforme CPU) e bind 0.0.0.0:5000
+CMD ["gunicorn", "--workers", "4", "--bind", "0.0.0.0:5000", "app:app"]
