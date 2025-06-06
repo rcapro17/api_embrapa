@@ -199,4 +199,4 @@ Pull requests são bem-vindos. Para mudanças significativas, abra uma issue ant
 
 ## 👉 Autor
 
-Desenvolvido por [Seu Nome] | [LinkedIn](https://linkedin.com/in/seunome) | [GitHub](https://github.com/seuusuario)
+Desenvolvido por Rodrigo Cunha | [LinkedIn](https://linkedin.com/in/seunome) | [GitHub](https://github.com/seuusuario)
